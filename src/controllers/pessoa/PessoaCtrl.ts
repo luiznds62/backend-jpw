@@ -28,20 +28,20 @@ export class PessoaCtrl {
 
     @Get("/")
     async buscarTodasPessoas(){
-        return this.pessoaService.buscarTodos();
+        return Object.values(this.pessoaService.buscarTodos());
     }
 
     @Get("/:id")
     async buscarPeloId(@PathParams("id") id: String){
-        return this.pessoaService.buscarPeloId(id);
+        return this.pessoaService.buscarPeloId(id); 
     }
 
-    @Put(":id")
+    @Put("/:id")
     async atualizarPessoa(@BodyParams() body: any, @PathParams("id") id: String){
         return this.pessoaService.atualizaPessoa(id,body.Nome,body.Tipo,body.Documento);
     }
 
-    @Delete(":id")
+    @Delete("/:id")
     async deletarPessoa(@PathParams("id") id: String){
         return this.pessoaService.removePessoa(id);
     }
