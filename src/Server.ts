@@ -9,6 +9,8 @@ const methodOverride = require("method-override");
 const rootDir = __dirname;
 
 @ServerSettings({
+  httpPort: "127.0.0.1:3000",
+  httpsPort: "127.0.0.2:3001",
   rootDir,
   acceptMimes: ["application/json"],
   mount: {

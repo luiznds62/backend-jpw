@@ -1,10 +1,11 @@
 import { Service } from "@tsed/common";
-import { NeDBService } from "../nedb/NeDBService";
+import { NeDBPessoa } from "../nedb/NeDBPessoa";
+import { Pessoa } from "../../interfaces/Pessoa";
 
 @Service()
 export class PessoaService {
 
-    constructor(private neDBService: NeDBService) {
+    constructor(private neDBService: NeDBPessoa) {
 
     }
 
@@ -85,49 +86,37 @@ export class PessoaService {
         return true;
     }
 
-    async cadastrar(nome: String, tipo: String, documento: String) {
-        var cnpjCpf = documento.replace(/[^0-9]/g, '');
+    async cadastrar(pessoa: Pessoa) {
+        var cnpjCpf = pessoa.documento.replace(/[^0-9]/g, '');
         var isValid;
 
-        if(tipo === 'PESSOA_FISICA'){
+        if(pessoa.tipo === 'PESSOA_FISICA'){
             isValid = this.validaCpf(cnpjCpf)
         }
 
-        if(tipo === 'PESSOA_JURIDICA'){
+        if(pessoa.tipo === 'PESSOA_JURIDICA'){
             isValid = this.validarCNPJ(cnpjCpf);
         }
 
         if (!isValid) {
-            return `O CPF/CNPJ informado para a pessoa (${nome}) é inválido.`
+            return `O CPF/CNPJ informado para a pessoa (${pessoa.nome}) é inválido.`
         }
-
-        var doc = {
-            nome: nome,
-            tipo: tipo,
-            documento: documento
-        };
-        console.log(`Documento >> ${Object.values(doc)}`)
-        var newDoc = this.neDBService.create(doc);
-        return `Inserido >> ${newDoc}`
+        return await this.neDBService.create(pessoa);
     }
 
-    async buscarTodos(): Promise<Object>{
-        var dados = [];
-        dados.push(this.neDBService.findAllDocuments());
-        return dados;
+    async buscarTodos(): Promise<Pessoa[]>{
+        return await this.neDBService.findAllDocuments();
     }
 
-    async buscarPeloId(id) {
-        var dados = this.neDBService.getById(id);
-        console.log(dados);
-        return this.neDBService.getById(id);
+    async buscarPeloId(id: string): Promise<Pessoa>{
+        return await this.neDBService.getById(id);
     }
 
-    async atualizaPessoa(id, nome, tipo, documento) {
-        return this.neDBService.updatePessoa(id, nome, tipo, documento);
+    async atualizaPessoa(id: string, pessoa: Pessoa){
+        return await this.neDBService.updatePessoa(id, pessoa);
     }
 
-    async removePessoa(id) {
-        return this.neDBService.deleteById(id);
+    async removePessoa(id){
+        return await this.neDBService.deleteById(id);
     }
 }

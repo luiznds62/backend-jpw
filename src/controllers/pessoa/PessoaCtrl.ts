@@ -1,5 +1,4 @@
 import {
-    Authenticated,
     BodyParams,
     Controller,
     Delete,
@@ -8,13 +7,11 @@ import {
     Post,
     Put,
     Required,
-    Status
 } from "@tsed/common";
-import { EventsCtrl } from "../events/EventsCtrl";
 import { PessoaService } from "../../services/pessoa/PessoaService";
-import { resolve } from "bluebird";
+import { Pessoa } from "../../interfaces/Pessoa";
 
-@Controller("/pessoa", EventsCtrl)
+@Controller("/pessoa")
 export class PessoaCtrl {
 
     constructor(private pessoaService: PessoaService){
@@ -22,28 +19,28 @@ export class PessoaCtrl {
     }
 
     @Post("/")
-    async cadastraPessoa(@BodyParams() body: any){
-        return this.pessoaService.cadastrar(body.Nome,body.Tipo,body.Documento);
-    }
-
-    @Get("/")
-    async buscarTodasPessoas(){
-        return Object.values(this.pessoaService.buscarTodos());
+    async cadastraPessoa(@BodyParams() pessoa: Pessoa){
+        return await this.pessoaService.cadastrar(pessoa);
     }
 
     @Get("/:id")
-    async buscarPeloId(@PathParams("id") id: String){
-        return this.pessoaService.buscarPeloId(id); 
+    async buscarPeloId(@PathParams("id") @Required() id: string): Promise<Pessoa>{
+        return await this.pessoaService.buscarPeloId(id); 
+    }
+
+    @Get("/")
+     async buscarTodasPessoas(): Promise<Pessoa[]>{
+         return await this.pessoaService.buscarTodos();
     }
 
     @Put("/:id")
-    async atualizarPessoa(@BodyParams() body: any, @PathParams("id") id: String){
-        return this.pessoaService.atualizaPessoa(id,body.Nome,body.Tipo,body.Documento);
+    async atualizarPessoa(@PathParams("id") id: string, @BodyParams() pessoa: Pessoa){
+        return await this.pessoaService.atualizaPessoa(id,pessoa);
     }
 
     @Delete("/:id")
-    async deletarPessoa(@PathParams("id") id: String){
-        return this.pessoaService.removePessoa(id);
+    async deletarPessoa(@PathParams("id") @Required() id: string){
+        return await this.pessoaService.removePessoa(id);
     }
 }
 
