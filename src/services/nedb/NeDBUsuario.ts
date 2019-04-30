@@ -20,7 +20,7 @@ export class NeDBUsuario {
         if(err){
           reject(err);
         } else{
-          resolve(`${newDoc} criado com sucesso!`);
+          resolve(`${newDoc} - Usuário criado com sucesso!`);
         }
       });
     });
@@ -57,7 +57,7 @@ export class NeDBUsuario {
         if(err){
           reject(err);
         }
-        resolve(`${numReplaced} alterado com sucesso!`);
+        resolve(`${numReplaced} - Usuário alterado com sucesso!`);
       });
     });
   }
@@ -68,7 +68,7 @@ export class NeDBUsuario {
         if(err){
           reject(err);
         }
-        resolve(`${numRemoved} removido com sucesso!`);
+        resolve(`${numRemoved} - Usuário removido com sucesso!`);
       });
     });
   }

@@ -11,8 +11,8 @@ import {
 import { UsuarioService } from "../../services/usuario/UsuarioService";
 import { Usuario } from "../../interfaces/Usuario";
 
-@Controller("/pessoa")
-export class PessoaCtrl {
+@Controller("/usuario")
+export class UsuarioCtrl {
 
     constructor(private usuarioService: UsuarioService){
 
