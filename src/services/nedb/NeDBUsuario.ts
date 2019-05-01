@@ -14,6 +14,18 @@ export class NeDBUsuario {
     });
   }
 
+  async getUsuarioByUsuario(usuario: string): Promise<Usuario>{
+    return new Promise((resolve,reject) => {
+      db.find({ usuario: usuario }, function (err, doc) {
+        if(err){
+          reject(err);
+        } else {
+          resolve(doc);
+        }
+      });
+    });
+  }
+
   async create(usuario: Usuario){
     return new Promise((resolve,reject) => {
       db.insert(usuario, function (err, newDoc) {

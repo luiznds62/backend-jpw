@@ -20,18 +20,57 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const common_1 = require("@tsed/common");
 var Datastore = require('nedb');
 var db = new Datastore({
-    filename: 'C:'
+    filename: 'C:\ '
 });
 let NeDBService = class NeDBService {
     constructor() {
         db.loadDatabase(function (err) {
-            //Comandos
+            console.log(`Erros no loadDatabase >> ${err}`);
         });
     }
     create(doc) {
+        console.log(`Salvando no NeDB >> ${doc}`);
+        db.insert(doc, function (err, newDoc) {
+            console.log(`Erros create >> ${err} Sucesso create >> ${newDoc}`);
+            return newDoc;
+        });
+    }
+    findAllDocuments() {
+        db.find({}, function (err, docs) {
+            console.log(`Erros no findAllDocuments >> ${err} Sucesso no findAllDocuments >> ${docs}`);
+            docs.forEach(element => {
+                console.log(element);
+            });
+            return docs;
+        });
+    }
+    getById(id) {
+        db.find({ _id: id }, function (err, doc) {
+            console.log(`Erros no getById >> ${err} Sucesso no getById >> ${doc}`);
+            return doc;
+        });
+    }
+    updatePessoa(id, nome, tipo, documento) {
+        db.update({ _id: id }, { $set: { nome: nome, tipo: tipo, documento: documento } }, { multi: true }, function (err, numReplaced) {
+            console.log(`Erros no updatePessoa >> ${err} Sucesso no updatePessoa >> ${numReplaced}`);
+            return numReplaced;
+        });
+    }
+    deleteById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            db.insert(doc, function (err, newDoc) {
-                return newDoc;
+            var retorno = "";
+            db.remove({ _id: id }, {}, function (err, numRemoved) {
+                console.log(`Erros no deleteById >> ${err} Sucesso no deleteById >> ${numRemoved}`);
+                retorno += `Registro deletado : ${numRemoved}`;
+            });
+            return retorno;
+        });
+    }
+    updateConta(id, descricao, pessoa, tipo, valor) {
+        return __awaiter(this, void 0, void 0, function* () {
+            db.update({ _id: id }, { $set: { descricao: descricao, pessoa: pessoa, tipo: tipo, valor: valor } }, { multi: true }, function (err, numReplaced) {
+                console.log(`Erros no updateConta >> ${err} Sucesso no updateConta >> ${numReplaced}`);
+                return numReplaced;
             });
         });
     }

@@ -21,16 +21,34 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const common_1 = require("@tsed/common");
-const EventsCtrl_1 = require("../events/EventsCtrl");
 const PessoaService_1 = require("../../services/pessoa/PessoaService");
 let PessoaCtrl = class PessoaCtrl {
     constructor(pessoaService) {
         this.pessoaService = pessoaService;
     }
-    cadastraPessoa(body) {
+    cadastraPessoa(pessoa) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log(`Resposta >> ${JSON.stringify(body)}`);
-            return body;
+            return yield this.pessoaService.cadastrar(pessoa);
+        });
+    }
+    buscarPeloId(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.pessoaService.buscarPeloId(id);
+        });
+    }
+    buscarTodasPessoas() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.pessoaService.buscarTodos();
+        });
+    }
+    atualizarPessoa(id, pessoa) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.pessoaService.atualizaPessoa(id, pessoa);
+        });
+    }
+    deletarPessoa(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.pessoaService.removePessoa(id);
         });
     }
 };
@@ -41,8 +59,35 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], PessoaCtrl.prototype, "cadastraPessoa", null);
+__decorate([
+    common_1.Get("/:id"),
+    __param(0, common_1.PathParams("id")), __param(0, common_1.Required()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], PessoaCtrl.prototype, "buscarPeloId", null);
+__decorate([
+    common_1.Get("/"),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], PessoaCtrl.prototype, "buscarTodasPessoas", null);
+__decorate([
+    common_1.Put("/:id"),
+    __param(0, common_1.PathParams("id")), __param(1, common_1.BodyParams()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", Promise)
+], PessoaCtrl.prototype, "atualizarPessoa", null);
+__decorate([
+    common_1.Delete("/:id"),
+    __param(0, common_1.PathParams("id")), __param(0, common_1.Required()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], PessoaCtrl.prototype, "deletarPessoa", null);
 PessoaCtrl = __decorate([
-    common_1.Controller("/pessoa", EventsCtrl_1.EventsCtrl),
+    common_1.Controller("/pessoa"),
     __metadata("design:paramtypes", [PessoaService_1.PessoaService])
 ], PessoaCtrl);
 exports.PessoaCtrl = PessoaCtrl;

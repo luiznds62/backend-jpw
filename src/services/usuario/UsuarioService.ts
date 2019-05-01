@@ -9,6 +9,15 @@ export class UsuarioService {
 
     }
 
+    async login(usuario: string, senha: string){
+        var usuarioLogin = await this.neDBService.getUsuarioByUsuario(usuario);
+        if(usuarioLogin[0].senha === senha){
+            return `Login realizado com sucesso`
+        }else{
+            return `Senha inválida`
+        }
+    }
+
     async cadastrar(usuario: Usuario) {
         return await this.neDBService.create(usuario);
     }

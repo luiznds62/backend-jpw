@@ -40,6 +40,8 @@ let Server = class Server extends common_1.ServerLoader {
 };
 Server = __decorate([
     common_1.ServerSettings({
+        httpPort: "127.0.0.1:3000",
+        httpsPort: "127.0.0.2:3001",
         rootDir,
         acceptMimes: ["application/json"],
         mount: {

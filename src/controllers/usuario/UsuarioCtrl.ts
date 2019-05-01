@@ -33,6 +33,12 @@ export class UsuarioCtrl {
          return await this.usuarioService.buscarTodos();
     }
 
+    @Get("/login/:usuario/:senha")
+    async login(@PathParams("usuario") @Required() usuario: string,
+                @PathParams("senha") @Required() senha: string){
+        return await this.usuarioService.login(usuario,senha);
+    }
+
     @Put("/:id")
     async atualizarUsuario(@PathParams("id") id: string, @BodyParams() usuario: Usuario){
         return await this.usuarioService.atualizaUsuario(id,usuario);
