@@ -1,4 +1,5 @@
 import {GlobalAcceptMimesMiddleware, ServerLoader, ServerSettings} from "@tsed/common";
+import * as cors from "cors";
 import "@tsed/swagger";
 import {$log} from "ts-log-debug";
 
@@ -7,6 +8,13 @@ const bodyParser = require("body-parser");
 const compress = require("compression");
 const methodOverride = require("method-override");
 const rootDir = __dirname;
+const options:cors.CorsOptions = {
+  allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "X-Access-Token"],
+  credentials: true,
+  methods: "GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE",
+  origin: "http://localhost:4200",
+  preflightContinue: false
+}
 
 @ServerSettings({
   rootDir,
@@ -36,6 +44,7 @@ export class Server extends ServerLoader {
   $onMountingMiddlewares(): void | Promise<any> {
     this
       .use(GlobalAcceptMimesMiddleware)
+      .use(cors(options))
       .use(cookieParser())
       .use(compress({}))
       .use(methodOverride())
