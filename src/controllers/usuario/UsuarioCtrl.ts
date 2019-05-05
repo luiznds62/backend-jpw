@@ -14,6 +14,7 @@ import { UsuarioDTO } from "../../dto/UsuarioDto";
 import { Exception } from "../../common/Exception";
 import { ReturnDTO } from "../../common/ReturnDTO";
 import { ExceptionMensagens } from "../../common/ExceptionsMensagens";
+import { ExportToCsv } from 'export-to-csv';
 
 @Controller("/usuario")
 export class UsuarioCtrl {
@@ -46,6 +47,25 @@ export class UsuarioCtrl {
         }).catch(function(){
             new ReturnDTO(new ExceptionMensagens().mensagemPadraoBanco, false, null);
         });
+    }
+
+    @Get("/relusuario/")
+    async relatorioUsuario(){
+        const options = { 
+            fieldSeparator: ',',
+            quoteStrings: '"',
+            decimalSeparator: '.',
+            showLabels: true, 
+            showTitle: true,
+            title: 'Relatório de usuários',
+            useTextFile: false,
+            useBom: true,
+            useKeysAsHeaders: true,
+          };
+        
+        var dadosUsuario = await this.usuarioService.buscarTodos();
+        const csvExporter = new ExportToCsv(options);
+        return window.open(encodeURI(csvExporter.generateCsv(dadosUsuario)));
     }
 
     @Get("/")
