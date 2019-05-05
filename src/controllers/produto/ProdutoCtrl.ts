@@ -41,7 +41,7 @@ export class ProdutoCtrl {
 
     @Get("/:id")
     async buscarPeloId(@PathParams("id") @Required() id: string) {
-        return await this.produtoService.buscarPeloId(id).then(function (produtoDB: Produto) {
+        return await this.produtoService.buscarPeloId(id).then(function (produtoDB: ProdutoDto) {
             return new ReturnDTO('', true, produtoDB);
         }).catch(function () {
             new ReturnDTO(new ExceptionMensagens().mensagemPadraoBanco, false, null);
@@ -50,8 +50,8 @@ export class ProdutoCtrl {
 
     @Get("/")
      async buscarTodosProdutos(){
-         return await this.produtoService.buscarTodos().then(function(produtoDB:Produto[]){
-            return new ReturnDTO('',true,produtoDB)
+         return await this.produtoService.buscarTodos().then(function(produtosDB:ProdutoDto[]){
+            return new ReturnDTO('',true,produtosDB)
          }).catch(function(){
             new ReturnDTO(new ExceptionMensagens().mensagemPadraoBanco, false, null);
          });

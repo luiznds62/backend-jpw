@@ -4,6 +4,7 @@ export interface Produto {
     descricao: string;
     marca: string;
     valorUnitario: number;
+    valorUnitarioDolar: number,
     origem: string;
     usuarioCadastro: string;
   }
