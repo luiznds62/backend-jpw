@@ -4,14 +4,12 @@ import { ConversorMonetarioService } from "../services/conversorMonetario/conver
 import { UsuarioService } from "../services/usuario/UsuarioService";
 
 export class ProdutoDto{
-    private usuarioService: UsuarioService
-
     async converteValor(valor){
         var conversorMonetarioService: ConversorMonetarioService;
         return await conversorMonetarioService.converteMoedas('BRL','USD',valor);
     }
 
-    constructor(){
+    constructor(private usuarioService: UsuarioService){
         
     }
 

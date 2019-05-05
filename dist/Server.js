@@ -7,6 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const common_1 = require("@tsed/common");
+const cors = require("cors");
 require("@tsed/swagger");
 const ts_log_debug_1 = require("ts-log-debug");
 const cookieParser = require("cookie-parser");
@@ -14,6 +15,13 @@ const bodyParser = require("body-parser");
 const compress = require("compression");
 const methodOverride = require("method-override");
 const rootDir = __dirname;
+const options = {
+    allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "X-Access-Token"],
+    credentials: true,
+    methods: "GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE",
+    origin: "http://localhost:4200",
+    preflightContinue: false
+};
 let Server = class Server extends common_1.ServerLoader {
     /**
      * This method let you configure the middleware required by your application to works.
@@ -22,6 +30,7 @@ let Server = class Server extends common_1.ServerLoader {
     $onMountingMiddlewares() {
         this
             .use(common_1.GlobalAcceptMimesMiddleware)
+            .use(cors(options))
             .use(cookieParser())
             .use(compress({}))
             .use(methodOverride())

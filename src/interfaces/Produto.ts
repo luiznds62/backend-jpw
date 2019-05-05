@@ -6,6 +6,6 @@ export interface Produto {
     valorUnitario: number;
     valorUnitarioDolar: number,
     origem: string;
-    usuarioCadastro: string;
+    usuarioCadastro: any;
   }
   

@@ -16,16 +16,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const common_1 = require("@tsed/common");
 var axios = require('axios');
+var valorConvertido = 0;
 let ConversorMonetarioService = class ConversorMonetarioService {
     converteMoedas(moedaOrigem, moedaDestino, valorConversao) {
         return __awaiter(this, void 0, void 0, function* () {
             var parametros = (`${moedaOrigem}_${moedaDestino}`).toUpperCase();
             var url = `https://free.currconv.com/api/v7/convert?q=${parametros}&compact=ultra&apiKey=5710634e81a8da6e9923`;
             axios.get(url).then(function (response) {
-                var valorMoeda = response.data;
-                console.log(valorMoeda);
+                for (const key in response.data) {
+                    if (response.data.hasOwnProperty(key)) {
+                        var valorMoeda = response.data[key];
+                    }
+                }
+                setValorConvertido(valorConversao * valorMoeda);
             });
-            //return `Moeda origem: ${cotacaoOrigem}<br>Moeda destino: ${cotacaoDestino}<br>Valor origem:${valorConversao}<br>Valor convertido: ${110}`
+            return valorConvertido;
         });
     }
 };
@@ -33,4 +38,7 @@ ConversorMonetarioService = __decorate([
     common_1.Service()
 ], ConversorMonetarioService);
 exports.ConversorMonetarioService = ConversorMonetarioService;
+function setValorConvertido(valor) {
+    valorConvertido = valor;
+}
 //# sourceMappingURL=conversorMonetarioService.js.map

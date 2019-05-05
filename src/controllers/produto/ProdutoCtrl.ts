@@ -14,11 +14,12 @@ import { ProdutoDto } from "../../dto/ProdutoDto";
 import { Exception } from "../../common/Exception";
 import { ReturnDTO } from "../../common/ReturnDTO";
 import { ExceptionMensagens } from "../../common/ExceptionsMensagens";
+import { UsuarioService } from "../../services/usuario/UsuarioService";
 
 @Controller("/produto")
 export class ProdutoCtrl {
 
-    constructor(private produtoService: ProdutoService) {
+    constructor(private produtoService: ProdutoService, private usuarioService: UsuarioService) {
 
     }
 

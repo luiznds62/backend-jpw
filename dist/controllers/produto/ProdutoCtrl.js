@@ -21,24 +21,25 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const common_1 = require("@tsed/common");
-const UsuarioService_1 = require("../../services/usuario/UsuarioService");
-const UsuarioDto_1 = require("../../dto/UsuarioDto");
+const ProdutoService_1 = require("../../services/produto/ProdutoService");
+const ProdutoDto_1 = require("../../dto/ProdutoDto");
 const ReturnDTO_1 = require("../../common/ReturnDTO");
 const ExceptionsMensagens_1 = require("../../common/ExceptionsMensagens");
-const export_to_csv_1 = require("export-to-csv");
-let UsuarioCtrl = class UsuarioCtrl {
-    constructor(usuarioService) {
+const UsuarioService_1 = require("../../services/usuario/UsuarioService");
+let ProdutoCtrl = class ProdutoCtrl {
+    constructor(produtoService, usuarioService) {
+        this.produtoService = produtoService;
         this.usuarioService = usuarioService;
     }
-    cadastrarUsuario(usuarioDTO) {
+    cadastrarUsuario(produtoDto) {
         return __awaiter(this, void 0, void 0, function* () {
-            var exception = yield usuarioDTO.valide();
+            var exception = yield produtoDto.valide();
             if (exception.erro) {
                 return yield new ReturnDTO_1.ReturnDTO(exception.mensagem, false, null);
             }
-            var usuario = yield usuarioDTO.toDB();
-            return yield this.usuarioService.cadastrar(usuario).then(function (usuarioDB) {
-                return new ReturnDTO_1.ReturnDTO('', true, usuarioDB);
+            var produto = yield produtoDto.toDB();
+            return yield this.produtoService.cadastrar(produto).then(function (produtoDB) {
+                return new ReturnDTO_1.ReturnDTO('', true, produtoDB);
             }).catch(function () {
                 new ReturnDTO_1.ReturnDTO(new ExceptionsMensagens_1.ExceptionMensagens().mensagemPadraoBanco, false, null);
             });
@@ -46,63 +47,31 @@ let UsuarioCtrl = class UsuarioCtrl {
     }
     buscarPeloId(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.usuarioService.buscarPeloId(id).then(function (usuarioDB) {
-                return new ReturnDTO_1.ReturnDTO('', true, usuarioDB);
+            return yield this.produtoService.buscarPeloId(id).then(function (produtoDB) {
+                return new ReturnDTO_1.ReturnDTO('', true, produtoDB);
             }).catch(function () {
                 new ReturnDTO_1.ReturnDTO(new ExceptionsMensagens_1.ExceptionMensagens().mensagemPadraoBanco, false, null);
             });
         });
     }
-    relatorioUsuario() {
+    buscarTodosProdutos() {
         return __awaiter(this, void 0, void 0, function* () {
-            const options = {
-                fieldSeparator: ',',
-                quoteStrings: '"',
-                decimalSeparator: '.',
-                showLabels: true,
-                showTitle: true,
-                title: 'Relatório de usuários',
-                useTextFile: false,
-                useBom: true,
-                useKeysAsHeaders: true,
-            };
-            var dadosUsuario = yield this.usuarioService.buscarTodos();
-            const csvExporter = new export_to_csv_1.ExportToCsv(options);
-            return window.open(encodeURI(csvExporter.generateCsv(dadosUsuario)));
-        });
-    }
-    buscarTodosUsuarios() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield this.usuarioService.buscarTodos().then(function (usuariosDB) {
-                return new ReturnDTO_1.ReturnDTO('', true, usuariosDB);
+            return yield this.produtoService.buscarTodos().then(function (produtosDB) {
+                return new ReturnDTO_1.ReturnDTO('', true, produtosDB);
             }).catch(function () {
                 new ReturnDTO_1.ReturnDTO(new ExceptionsMensagens_1.ExceptionMensagens().mensagemPadraoBanco, false, null);
             });
         });
     }
-    login(usuario, senha) {
+    atualizarProduto(id, produtoDto) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.usuarioService.login(usuario, senha).then(function (retorno) {
-                if (retorno === 'Login realizado com sucesso') {
-                    return new ReturnDTO_1.ReturnDTO(retorno, true, '');
-                }
-                else {
-                    return new ReturnDTO_1.ReturnDTO(retorno, false, '');
-                }
-            }).catch(function () {
-                new ReturnDTO_1.ReturnDTO(new ExceptionsMensagens_1.ExceptionMensagens().mensagemPadraoBanco, false, null);
-            });
-        });
-    }
-    atualizarUsuario(id, usuarioDTO) {
-        return __awaiter(this, void 0, void 0, function* () {
-            var exception = yield usuarioDTO.valide();
+            var exception = yield produtoDto.valide();
             if (exception.erro) {
                 return yield new ReturnDTO_1.ReturnDTO(exception.mensagem, false, null);
             }
-            var usuario = yield usuarioDTO.toDB();
-            return yield this.usuarioService.atualizaUsuario(id, usuario).then(function (retorno) {
-                if (retorno === '0 - Usuário alterado com sucesso!') {
+            var produto = yield produtoDto.toDB();
+            return yield this.produtoService.atualizaProduto(id, produto).then(function (retorno) {
+                if (retorno === '0 - Produto alterado com sucesso!') {
                     return new ReturnDTO_1.ReturnDTO('', false, retorno);
                 }
                 return new ReturnDTO_1.ReturnDTO('', true, retorno);
@@ -111,9 +80,9 @@ let UsuarioCtrl = class UsuarioCtrl {
             });
         });
     }
-    deletarUsuario(id) {
+    deletarProduto(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.usuarioService.removeUsuario(id).then(function (retorno) {
+            return yield this.produtoService.removeProduto(id).then(function (retorno) {
                 return new ReturnDTO_1.ReturnDTO('', true, retorno);
             }).catch(function () {
                 new ReturnDTO_1.ReturnDTO(new ExceptionsMensagens_1.ExceptionMensagens().mensagemPadraoBanco, false, null);
@@ -125,53 +94,39 @@ __decorate([
     common_1.Post("/"),
     __param(0, common_1.BodyParams()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [UsuarioDto_1.UsuarioDTO]),
+    __metadata("design:paramtypes", [ProdutoDto_1.ProdutoDto]),
     __metadata("design:returntype", Promise)
-], UsuarioCtrl.prototype, "cadastrarUsuario", null);
+], ProdutoCtrl.prototype, "cadastrarUsuario", null);
 __decorate([
     common_1.Get("/:id"),
     __param(0, common_1.PathParams("id")), __param(0, common_1.Required()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
-], UsuarioCtrl.prototype, "buscarPeloId", null);
-__decorate([
-    common_1.Get("/relusuario/"),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", Promise)
-], UsuarioCtrl.prototype, "relatorioUsuario", null);
+], ProdutoCtrl.prototype, "buscarPeloId", null);
 __decorate([
     common_1.Get("/"),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
-], UsuarioCtrl.prototype, "buscarTodosUsuarios", null);
-__decorate([
-    common_1.Get("/login/:usuario/:senha"),
-    __param(0, common_1.PathParams("usuario")), __param(0, common_1.Required()),
-    __param(1, common_1.PathParams("senha")), __param(1, common_1.Required()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String]),
-    __metadata("design:returntype", Promise)
-], UsuarioCtrl.prototype, "login", null);
+], ProdutoCtrl.prototype, "buscarTodosProdutos", null);
 __decorate([
     common_1.Put("/:id"),
     __param(0, common_1.PathParams("id")), __param(1, common_1.BodyParams()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, UsuarioDto_1.UsuarioDTO]),
+    __metadata("design:paramtypes", [String, ProdutoDto_1.ProdutoDto]),
     __metadata("design:returntype", Promise)
-], UsuarioCtrl.prototype, "atualizarUsuario", null);
+], ProdutoCtrl.prototype, "atualizarProduto", null);
 __decorate([
     common_1.Delete("/:id"),
     __param(0, common_1.PathParams("id")), __param(0, common_1.Required()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
-], UsuarioCtrl.prototype, "deletarUsuario", null);
-UsuarioCtrl = __decorate([
-    common_1.Controller("/usuario"),
-    __metadata("design:paramtypes", [UsuarioService_1.UsuarioService])
-], UsuarioCtrl);
-exports.UsuarioCtrl = UsuarioCtrl;
-//# sourceMappingURL=UsuarioCtrl.js.map
+], ProdutoCtrl.prototype, "deletarProduto", null);
+ProdutoCtrl = __decorate([
+    common_1.Controller("/produto"),
+    __metadata("design:paramtypes", [ProdutoService_1.ProdutoService, UsuarioService_1.UsuarioService])
+], ProdutoCtrl);
+exports.ProdutoCtrl = ProdutoCtrl;
+//# sourceMappingURL=ProdutoCtrl.js.map

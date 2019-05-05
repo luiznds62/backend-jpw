@@ -1,11 +1,12 @@
 import { Service } from "@tsed/common";
 import { NeDBProduto } from "../nedb/NeDBProduto";
 import { Produto } from "../../interfaces/Produto";
+import { NeDBUsuario } from "../nedb/NeDBUsuario";
 
 @Service()
 export class ProdutoService {
 
-    constructor(private neDBService: NeDBProduto) {
+    constructor(private neDBService: NeDBProduto, private neDBUsuario: NeDBUsuario) {
 
     }
 
@@ -14,11 +15,17 @@ export class ProdutoService {
     }
 
     async buscarTodos(): Promise<Produto[]>{
-        return await this.neDBService.findAllDocuments();
+        var produtos =  await this.neDBService.findAllDocuments();
+        for(var i = 0; i < produtos.length; i++){
+            produtos[i].usuarioCadastro = await this.neDBUsuario.getById(produtos[i].usuarioCadastro);
+        }
+        return produtos
     }
 
     async buscarPeloId(id: string): Promise<Produto>{
-        return await this.neDBService.getById(id);
+        var produto =  await this.neDBService.getById(id);
+        produto[0].usuarioCadastro = await this.neDBUsuario.getById(produto[0].usuarioCadastro);
+        return produto
     }
 
     async atualizaProduto(id: string, produto: Produto){

@@ -18,25 +18,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const common_1 = require("@tsed/common");
+const NeDBProduto_1 = require("../nedb/NeDBProduto");
 const NeDBUsuario_1 = require("../nedb/NeDBUsuario");
-let UsuarioService = class UsuarioService {
-    constructor(neDBService) {
+let ProdutoService = class ProdutoService {
+    constructor(neDBService, neDBUsuario) {
         this.neDBService = neDBService;
+        this.neDBUsuario = neDBUsuario;
     }
-    login(usuario, senha) {
+    cadastrar(produto) {
         return __awaiter(this, void 0, void 0, function* () {
-            var usuarioLogin = yield this.neDBService.getUsuarioByUsuario(usuario);
-            if (usuarioLogin[0].senha === senha) {
-                return `Login realizado com sucesso`;
-            }
-            else {
-                return `Senha inválida`;
-            }
-        });
-    }
-    cadastrar(usuario) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield this.neDBService.create(usuario);
+            return yield this.neDBService.create(produto);
         });
     }
     buscarTodos() {
@@ -46,23 +37,28 @@ let UsuarioService = class UsuarioService {
     }
     buscarPeloId(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.neDBService.getById(id);
+            var produto = yield this.neDBService.getById(id);
+            var idUsuario = produto.usuarioCadastro;
+            console.log(idUsuario);
+            var teste = yield this.neDBUsuario.getById(idUsuario);
+            console.log(teste);
+            return produto;
         });
     }
-    atualizaUsuario(id, usuario) {
+    atualizaProduto(id, produto) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.neDBService.updateUsuario(id, usuario);
+            return yield this.neDBService.updateProduto(id, produto);
         });
     }
-    removeUsuario(id) {
+    removeProduto(id) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield this.neDBService.deleteById(id);
         });
     }
 };
-UsuarioService = __decorate([
+ProdutoService = __decorate([
     common_1.Service(),
-    __metadata("design:paramtypes", [NeDBUsuario_1.NeDBUsuario])
-], UsuarioService);
-exports.UsuarioService = UsuarioService;
-//# sourceMappingURL=UsuarioService.js.map
+    __metadata("design:paramtypes", [NeDBProduto_1.NeDBProduto, NeDBUsuario_1.NeDBUsuario])
+], ProdutoService);
+exports.ProdutoService = ProdutoService;
+//# sourceMappingURL=ProdutoService.js.map
