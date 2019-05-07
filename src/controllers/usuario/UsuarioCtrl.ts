@@ -17,8 +17,8 @@ import { UsuarioDTO } from "../../dto/UsuarioDto";
 import { Exception } from "../../common/Exception";
 import { ReturnDTO } from "../../common/ReturnDTO";
 import { ExceptionMensagens } from "../../common/ExceptionsMensagens";
-import * as Express from "express";
 import { ConversorCSVService } from "../../services/conversorCSV/ConversorCSVService";
+import * as Express from "express";
 var path = require('path');
 var mime = require('mime');
 var fs = require('fs');
@@ -57,9 +57,13 @@ export class UsuarioCtrl {
     }
 
     @Get("/relatorio/usuario")
-    async relatorioUsuario( @Req() req: Express.Request, @Res() res: Express.Response, @Next() next: Express.NextFunction){
+    async relatorioUsuario(
+        @Req() req: Express.Request,
+        @Res() res: Express.Response,
+        @Next() next: Express.NextFunction
+    ){
         var dadosUsuario = await this.usuarioService.buscarTodos();
-        var csv = await this.csvService.converteJsonToCsv(dadosUsuario);
+        var csv = await this.csvService.geraCsvUsuario(dadosUsuario);
 
         var writerStream = fs.createWriteStream('usuarios.csv');
         writerStream.write(csv,'UTF8');

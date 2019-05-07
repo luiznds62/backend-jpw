@@ -7,6 +7,9 @@ import {
     Post,
     Put,
     Required,
+    Res,
+    Req,
+    Next,
 } from "@tsed/common";
 import { ProdutoService } from "../../services/produto/ProdutoService";
 import { Produto } from "../../interfaces/Produto";
@@ -15,11 +18,16 @@ import { Exception } from "../../common/Exception";
 import { ReturnDTO } from "../../common/ReturnDTO";
 import { ExceptionMensagens } from "../../common/ExceptionsMensagens";
 import { UsuarioService } from "../../services/usuario/UsuarioService";
+import { ConversorCSVService } from "../../services/conversorCSV/ConversorCSVService";
+import * as Express from "express";
+var path = require('path');
+var mime = require('mime');
+var fs = require('fs');
 
 @Controller("/produto")
 export class ProdutoCtrl {
 
-    constructor(private produtoService: ProdutoService, private usuarioService: UsuarioService) {
+    constructor(private produtoService: ProdutoService, private usuarioService: UsuarioService, private csvService: ConversorCSVService) {
 
     }
 
@@ -38,6 +46,30 @@ export class ProdutoCtrl {
         }).catch(function () {
             new ReturnDTO(new ExceptionMensagens().mensagemPadraoBanco, false, null);
         });
+    }
+
+    @Get("/relatorio/produto")
+    async relatorioProduto(
+        @Req() req: Express.Request,
+        @Res() res: Express.Response,
+        @Next() next: Express.NextFunction
+    ){
+        var dadosProduto = await this.produtoService.buscarTodos();
+        var csv = await this.csvService.geraCsvProduto(dadosProduto);
+
+        var writerStream = fs.createWriteStream('produtos.csv');
+        writerStream.write(csv,'UTF8');
+        writerStream.end();
+        var file = "produtos.csv"
+
+        var filename = path.basename(file);
+        var mimetype = mime.lookup(file);
+
+        res.setHeader('Content-disposition', 'attachment; filename=' + filename);
+        res.setHeader('Content-type', mimetype);
+
+        var filestream = fs.createReadStream(file);
+        filestream.pipe(res);
     }
 
     @Get("/:id")

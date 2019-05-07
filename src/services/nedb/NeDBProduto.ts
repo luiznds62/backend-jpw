@@ -32,7 +32,6 @@ export class NeDBProduto {
                 if (err) {
                     reject(err);
                 } else {
-                    console.log(docs);
                     resolve(docs);
                 }
             });
