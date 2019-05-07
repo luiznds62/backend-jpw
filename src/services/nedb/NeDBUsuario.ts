@@ -44,7 +44,6 @@ export class NeDBUsuario {
         if(err){
           reject(err);
         } else {
-          console.log(docs);
           resolve(docs);
         }
       });

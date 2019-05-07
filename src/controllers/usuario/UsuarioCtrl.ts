@@ -7,6 +7,9 @@ import {
     Post,
     Put,
     Required,
+    Res,
+    Req,
+    Next,
 } from "@tsed/common";
 import { UsuarioService } from "../../services/usuario/UsuarioService";
 import { Usuario } from "../../interfaces/Usuario";
@@ -14,7 +17,7 @@ import { UsuarioDTO } from "../../dto/UsuarioDto";
 import { Exception } from "../../common/Exception";
 import { ReturnDTO } from "../../common/ReturnDTO";
 import { ExceptionMensagens } from "../../common/ExceptionsMensagens";
-import { ExportToCsv } from 'export-to-csv';
+import * as Express from "express";
 
 @Controller("/usuario")
 export class UsuarioCtrl {
@@ -49,23 +52,37 @@ export class UsuarioCtrl {
         });
     }
 
-    @Get("/relusuario/")
-    async relatorioUsuario(){
-        const options = { 
-            fieldSeparator: ',',
-            quoteStrings: '"',
-            decimalSeparator: '.',
-            showLabels: true, 
-            showTitle: true,
-            title: 'Relatório de usuários',
-            useTextFile: false,
-            useBom: true,
-            useKeysAsHeaders: true,
-          };
-        
+    @Get("/relatorio/usuario")
+    async relatorioUsuario( @Req() req: Express.Request, @Res() res: Express.Response, @Next() next: Express.NextFunction){
+        var path = require('path');
+        var mime = require('mime');
+        var fs = require('fs');
+
         var dadosUsuario = await this.usuarioService.buscarTodos();
-        const csvExporter = new ExportToCsv(options);
-        return window.open(encodeURI(csvExporter.generateCsv(dadosUsuario)));
+        var json = dadosUsuario;
+        var fields = Object.keys(json[0])
+        var replacer = function(key, value) { return value === null ? '' : value } 
+        var csv = json.map(function(row){
+        return fields.map(function(fieldName){
+            return JSON.stringify(row[fieldName], replacer)
+        }).join(',')
+        })
+        csv.unshift(fields.join(',')) 
+        var fs = require("fs");
+        var writerStream = fs.createWriteStream('/output.csv');
+        writerStream.write(JSON.stringify(csv),'UTF8');
+        writerStream.end();
+
+        var file = "output.csv"
+
+        var filename = path.basename(file);
+        var mimetype = mime.lookup(file);
+
+        res.setHeader('Content-disposition', 'attachment; filename=' + filename);
+        res.setHeader('Content-type', mimetype);
+
+        var filestream = fs.createReadStream(file);
+        filestream.pipe(res);
     }
 
     @Get("/")
