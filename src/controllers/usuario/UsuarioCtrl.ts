@@ -18,11 +18,15 @@ import { Exception } from "../../common/Exception";
 import { ReturnDTO } from "../../common/ReturnDTO";
 import { ExceptionMensagens } from "../../common/ExceptionsMensagens";
 import * as Express from "express";
+import { ConversorCSVService } from "../../services/conversorCSV/ConversorCSVService";
+var path = require('path');
+var mime = require('mime');
+var fs = require('fs');
 
 @Controller("/usuario")
 export class UsuarioCtrl {
 
-    constructor(private usuarioService: UsuarioService){
+    constructor(private usuarioService: UsuarioService, private csvService: ConversorCSVService){
 
     }
 
@@ -54,26 +58,13 @@ export class UsuarioCtrl {
 
     @Get("/relatorio/usuario")
     async relatorioUsuario( @Req() req: Express.Request, @Res() res: Express.Response, @Next() next: Express.NextFunction){
-        var path = require('path');
-        var mime = require('mime');
-        var fs = require('fs');
-
         var dadosUsuario = await this.usuarioService.buscarTodos();
-        var json = dadosUsuario;
-        var fields = Object.keys(json[0])
-        var replacer = function(key, value) { return value === null ? '' : value } 
-        var csv = json.map(function(row){
-        return fields.map(function(fieldName){
-            return JSON.stringify(row[fieldName], replacer)
-        }).join(',')
-        })
-        csv.unshift(fields.join(',')) 
-        var fs = require("fs");
-        var writerStream = fs.createWriteStream('/output.csv');
-        writerStream.write(JSON.stringify(csv),'UTF8');
-        writerStream.end();
+        var csv = await this.csvService.converteJsonToCsv(dadosUsuario);
 
-        var file = "output.csv"
+        var writerStream = fs.createWriteStream('usuarios.csv');
+        writerStream.write(csv,'UTF8');
+        writerStream.end();
+        var file = "usuarios.csv"
 
         var filename = path.basename(file);
         var mimetype = mime.lookup(file);
