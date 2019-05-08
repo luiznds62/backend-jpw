@@ -10,7 +10,9 @@ export class NeDBUsuario {
 
   constructor() {
     db.loadDatabase(function (err) {
-      console.log(`Erros no database Usuario >> ${err}`)
+      if(err){
+        console.log(`Erros no database Usuario >> ${err}`)
+      }
     });
   }
 

@@ -4,17 +4,22 @@ import { Usuario } from "../../interfaces/Usuario";
 
 @Service()
 export class UsuarioService {
+    neDBService = new NeDBUsuario;
 
-    constructor(private neDBService: NeDBUsuario) {
+    constructor() {
 
     }
 
     async login(usuario: string, senha: string){
         var usuarioLogin = await this.neDBService.getUsuarioByUsuario(usuario);
-        if(usuarioLogin[0].senha === senha){
-            return `Login realizado com sucesso`
+        if(usuarioLogin){
+            if(usuarioLogin[0].senha === senha){
+                return `Login realizado com sucesso`
+            }else{
+                return `Senha inválida`
+            }
         }else{
-            return `Senha inválida`
+            return `Usuário não encontrado`
         }
     }
 
