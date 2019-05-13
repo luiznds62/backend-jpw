@@ -60,9 +60,6 @@ export class VendaDto{
         if(this.quantidade === 0){
             return new Exception('A quantidade não foi informado!', true)
         }
-        if(this.valorTotal === 0){
-            return new Exception('O valor total não foi informado!', true)
-        }
  
         return new Exception('', false);
     }

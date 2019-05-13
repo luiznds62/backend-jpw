@@ -17,7 +17,8 @@ export class VendaService {
     }
 
     async cadastrar(venda: Venda) {
-        console.log(await this.conversorMonetarioService.converteMoedas('BRL','USD',venda.valorTotal));
+        var produto = await this.neDBProduto.getById(venda.produto)
+        venda.valorTotal = (produto[0].valorUnitario) * venda.quantidade;
         venda.valorTotalDolar = await this.conversorMonetarioService.converteMoedas('BRL','USD',venda.valorTotal);
         return await this.neDBService.create(venda);
     }
@@ -36,6 +37,15 @@ export class VendaService {
         Venda[0].usuarioCadastro = await this.neDBUsuario.getById(Venda[0].usuarioCadastro);
         Venda[0].produto = await this.neDBProduto.getById(Venda[0].produto);
         return Venda
+    }
+
+    async buscarVendaPorProduto(idProduto: string): Promise<Venda[]>{
+        var vendas = await this.neDBService.getByProduto(idProduto);
+        for(var i = 0; i < vendas.length; i++){
+            vendas[i].usuarioCadastro = await this.neDBUsuario.getById(vendas[i].usuarioCadastro);
+            vendas[i].produto = await this.neDBProduto.getById(vendas[i].produto);
+        }
+        return vendas
     }
 
     async atualizaVenda(id: string, venda: Venda) {

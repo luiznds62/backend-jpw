@@ -52,6 +52,18 @@ export class NeDBVenda {
         });
     }
 
+    async getByProduto(id: string): Promise<Venda[]> {
+        return new Promise((resolve, reject) => {
+            db.find({ produto: id }, function (err, docs) {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(docs);
+                }
+            });
+        });
+    }
+
     async updateVenda(id: String, Venda: Venda) {
         return new Promise((resolve, reject) => {
             db.update({ _id: id }, Venda, function (err, numReplaced) {

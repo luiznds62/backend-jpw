@@ -32,7 +32,7 @@ export class VendaCtrl {
     }
 
     @Post("/")
-    async cadastrarUsuario(@BodyParams() vendaDto: VendaDto) {
+    async cadastrarVenda(@BodyParams() vendaDto: VendaDto) {
         var exception: Exception = await vendaDto.valide();
 
         if (exception.erro) {
@@ -57,7 +57,7 @@ export class VendaCtrl {
         var dadosVenda = await this.vendaService.buscarTodos();
         var csv = await this.csvService.geraCsvVenda(dadosVenda);
 
-        var writerStream = fs.createWriteStream('Vendas.csv');
+        var writerStream = fs.createWriteStream('vendas.csv');
         writerStream.write(csv,'UTF8');
         writerStream.end();
         var file = "vendas.csv"
@@ -82,9 +82,24 @@ export class VendaCtrl {
     }
 
     @Get("/")
-     async buscarTodosVendas(){
+     async buscarTodosVenda(){
          return await this.vendaService.buscarTodos().then(function(VendasDB:VendaDto[]){
             return new ReturnDTO('',true,VendasDB)
+         }).catch(function(){
+            new ReturnDTO(new ExceptionMensagens().mensagemPadraoBanco, false, null);
+         });
+    }
+
+    @Get("/consolide/:idProduto")
+    async consolideVendaProduto(@PathParams("idProduto") @Required() idProduto: string){
+        var totalValorVendas = 0;
+        var totalValorVendasDolar = 0;
+        return await this.vendaService.buscarVendaPorProduto(idProduto).then(function(vendasDB:VendaDto[]){
+            for(var i = 0; i < vendasDB.length; i++){
+                totalValorVendas += vendasDB[i].valorTotal;
+                totalValorVendasDolar += vendasDB[i].valorTotalDolar;
+            }
+            return new ReturnDTO(`Total vendido R$: ${totalValorVendas}, Total vendido USD: ${totalValorVendasDolar}`,true,vendasDB)
          }).catch(function(){
             new ReturnDTO(new ExceptionMensagens().mensagemPadraoBanco, false, null);
          });
