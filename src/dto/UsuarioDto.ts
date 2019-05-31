@@ -46,8 +46,22 @@ export class UsuarioDTO {
                 return new Exception('Email já utilizado!', true)
             }
             if (this.usuario === usuarios[i].usuario) {
+                console.log(this.usuario);
+                console.log(usuarios[i].usuario);
                 return new Exception('Nome de usuário já utilizado!', true)
             }
+        }
+
+        if(this.usuario === ""){
+            return new Exception('Usuário inválido!', true)
+        }
+
+        if(this.senha === ""){
+            return new Exception('Senha inválido!', true)
+        }
+
+        if(this.email === ""){
+            return new Exception('Email inválido!', true)
         }
 
         if (!validarEmail(this.email)) {
