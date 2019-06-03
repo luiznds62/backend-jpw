@@ -11,7 +11,7 @@ import {
     Req,
     Next,
 } from "@tsed/common";
-import { VendaService } from "../../services/Venda/VendaService";
+import { VendaService } from "../../services/venda/VendaService";
 import { Venda } from "../../interfaces/Venda";
 import { VendaDto } from "../../dto/VendaDto";
 import { Exception } from "../../common/Exception";
