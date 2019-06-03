@@ -3,7 +3,6 @@ import * as cors from "cors";
 import "@tsed/swagger";
 import {$log} from "ts-log-debug";
 
-var porta = process.env.PORT || 3000; 
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const compress = require("compression");
@@ -34,7 +33,7 @@ const options:cors.CorsOptions = {
   calendar: {
     token: true
   },
-  httpPort: "127.0.0.1:" + porta,
+  httpPort: "127.0.0.1:3000",
   httpsPort: "127.0.0.2:3001",
 })
 export class Server extends ServerLoader {
