@@ -34,8 +34,8 @@ const options:cors.CorsOptions = {
   calendar: {
     token: true
   },
-  httpPort: porta,
-  httpsPort: porta,
+  httpPort: "http://crudjpw.herokuapp.com:"+ porta,
+  httpsPort: "https://crudjpw.herokuapp.com:" + porta,
 })
 export class Server extends ServerLoader {
   /**
