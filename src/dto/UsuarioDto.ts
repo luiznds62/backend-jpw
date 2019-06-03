@@ -41,7 +41,7 @@ export class UsuarioDTO {
 
     async valide(): Promise<Exception> {
         var usuarios = await this.usuarioService.buscarTodos()
-        for(var i = 0; i < usuarios.length; i++){
+        for(var i = 0; i < usuarios[0].length; i++){
             if (this.email === usuarios[i].email) {
                 return new Exception('Email já utilizado!', true)
             }
