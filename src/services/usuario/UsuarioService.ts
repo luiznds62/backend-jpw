@@ -27,11 +27,11 @@ export class UsuarioService {
         return await this.neDBService.create(usuario);
     }
 
-    async buscarTodos(): Promise<Usuario[]>{
+    async buscarTodos(){
         return await this.neDBService.findAllDocuments();
     }
 
-    async buscarPeloId(id: string): Promise<Usuario>{
+    async buscarPeloId(id: string){
         return await this.neDBService.getById(id);
     }
 
