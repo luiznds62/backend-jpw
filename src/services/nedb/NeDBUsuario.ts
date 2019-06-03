@@ -16,7 +16,7 @@ export class NeDBUsuario {
     });
   }
 
-  async getUsuarioByUsuario(usuario: string): Promise<Usuario>{
+  async getUsuarioByUsuario(usuario: string){
     return new Promise((resolve,reject) => {
       db.find({ usuario: usuario }, function (err, doc) {
         if(err){
@@ -40,7 +40,7 @@ export class NeDBUsuario {
     });
   }
 
-  async findAllDocuments(): Promise<Usuario[]>{
+  async findAllDocuments(){
     return new Promise((resolve,reject) => {
       db.find({}, function (err, docs) {
         if(err){
@@ -52,7 +52,7 @@ export class NeDBUsuario {
     });
   }
 
-  async getById(id: string): Promise<Usuario> {
+  async getById(id: string){
     return new Promise((resolve,reject) => {
       db.find({ _id: id }, function (err, doc) {
         if(err){
