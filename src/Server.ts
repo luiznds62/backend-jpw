@@ -3,7 +3,7 @@ import * as cors from "cors";
 import "@tsed/swagger";
 import {$log} from "ts-log-debug";
 
-var porta = process.env.PORT || 8080; 
+var porta = process.env.PORT || 3000; 
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const compress = require("compression");

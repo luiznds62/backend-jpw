@@ -21,7 +21,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const common_1 = require("@tsed/common");
-const VendaService_1 = require("../../services/Venda/VendaService");
+const VendaService_1 = require("../../services/venda/VendaService");
 const VendaDto_1 = require("../../dto/VendaDto");
 const ReturnDTO_1 = require("../../common/ReturnDTO");
 const ExceptionsMensagens_1 = require("../../common/ExceptionsMensagens");

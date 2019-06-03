@@ -39,7 +39,9 @@
     "method-override": "^3.0.0",
     "nedb": "^1.8.0",
     "node-uuid": "^1.4.8",
-    "ts-json-properties": "2.0.3"
+    "ts-json-properties": "2.0.3",
+    "ts-node": "^3.3.0",
+    "typescript": "^2.4.2"
   },
   "devDependencies": {
     "@types/chai": "^4.1.2",
