@@ -5,9 +5,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -18,46 +15,38 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const common_1 = require("@tsed/common");
-const NeDBService_1 = require("../nedb/NeDBService");
-let ContaService = class ContaService {
-    constructor(neDBService) {
-        this.neDBService = neDBService;
-    }
-    cadastrar(descricao, pessoa, tipo, valor) {
+let ConversorCSVService = class ConversorCSVService {
+    geraCsvUsuario(dadosJson) {
         return __awaiter(this, void 0, void 0, function* () {
-            var doc = { descricao: descricao,
-                pessoa: pessoa,
-                tipo: tipo,
-                valor: valor };
-            console.log(`Documento >> ${Object.values(doc)}`);
-            var newDoc = this.neDBService.create(doc);
-            return newDoc;
+            const { Parser } = require('json2csv');
+            const fields = ['id', 'usuario', 'senha', 'email', '_id'];
+            const json2csvParser = new Parser({ fields });
+            const csv = json2csvParser.parse(dadosJson);
+            return csv;
         });
     }
-    buscarTodos() {
+    geraCsvVenda(dadosJson) {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.neDBService.findAllDocuments();
+            const { Parser } = require('json2csv');
+            const fields = ['id', 'produto', 'usuarioCadastro', 'quantidade', 'valorTotal', 'valorTotalDolar', '_id'];
+            const json2csvParser = new Parser({ fields });
+            const csv = json2csvParser.parse(dadosJson);
+            return csv;
         });
     }
-    buscarPeloId(id) {
+    geraCsvProduto(dadosJson) {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.neDBService.getById(id);
-        });
-    }
-    atualizaConta(id, descricao, pessoa, tipo, valor) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.neDBService.updateConta(id, descricao, pessoa, tipo, valor);
-        });
-    }
-    removeConta(id) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.neDBService.deleteById(id);
+            const { Parser } = require('json2csv');
+            const fields = ['id', 'nome', 'descricao', 'marca',
+                'valorUnitario', 'valorUnitarioDolar', 'origem', 'usuarioCadastro', '_id'];
+            const json2csvParser = new Parser({ fields });
+            const csv = json2csvParser.parse(dadosJson);
+            return csv;
         });
     }
 };
-ContaService = __decorate([
-    common_1.Service(),
-    __metadata("design:paramtypes", [NeDBService_1.NeDBService])
-], ContaService);
-exports.ContaService = ContaService;
-//# sourceMappingURL=contaService.js.map
+ConversorCSVService = __decorate([
+    common_1.Service()
+], ConversorCSVService);
+exports.ConversorCSVService = ConversorCSVService;
+//# sourceMappingURL=ConversorCSVService.js.map

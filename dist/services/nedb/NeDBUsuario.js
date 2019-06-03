@@ -25,7 +25,9 @@ var db = new Datastore({
 let NeDBUsuario = class NeDBUsuario {
     constructor() {
         db.loadDatabase(function (err) {
-            console.log(`Erros no database Usuario >> ${err}`);
+            if (err) {
+                console.log(`Erros no database Usuario >> ${err}`);
+            }
         });
     }
     getUsuarioByUsuario(usuario) {
@@ -64,7 +66,6 @@ let NeDBUsuario = class NeDBUsuario {
                         reject(err);
                     }
                     else {
-                        console.log(docs);
                         resolve(docs);
                     }
                 });

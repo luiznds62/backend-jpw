@@ -20,17 +20,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const common_1 = require("@tsed/common");
 const NeDBUsuario_1 = require("../nedb/NeDBUsuario");
 let UsuarioService = class UsuarioService {
-    constructor(neDBService) {
-        this.neDBService = neDBService;
+    constructor() {
+        this.neDBService = new NeDBUsuario_1.NeDBUsuario;
     }
     login(usuario, senha) {
         return __awaiter(this, void 0, void 0, function* () {
             var usuarioLogin = yield this.neDBService.getUsuarioByUsuario(usuario);
-            if (usuarioLogin[0].senha === senha) {
-                return `Login realizado com sucesso`;
+            if (usuarioLogin) {
+                if (usuarioLogin[0].senha === senha) {
+                    return `Login realizado com sucesso`;
+                }
+                else {
+                    return `Senha inválida`;
+                }
             }
             else {
-                return `Senha inválida`;
+                return `Usuário não encontrado`;
             }
         });
     }
@@ -62,7 +67,7 @@ let UsuarioService = class UsuarioService {
 };
 UsuarioService = __decorate([
     common_1.Service(),
-    __metadata("design:paramtypes", [NeDBUsuario_1.NeDBUsuario])
+    __metadata("design:paramtypes", [])
 ], UsuarioService);
 exports.UsuarioService = UsuarioService;
 //# sourceMappingURL=UsuarioService.js.map

@@ -22,7 +22,7 @@ let ConversorMonetarioService = class ConversorMonetarioService {
         return __awaiter(this, void 0, void 0, function* () {
             var parametros = (`${moedaOrigem}_${moedaDestino}`).toUpperCase();
             var url = `https://free.currconv.com/api/v7/convert?q=${parametros}&compact=ultra&apiKey=5710634e81a8da6e9923`;
-            axios.get(url).then(function (response) {
+            yield axios.get(url).then(function (response) {
                 for (const key in response.data) {
                     if (response.data.hasOwnProperty(key)) {
                         var valorMoeda = response.data[key];
