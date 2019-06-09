@@ -28,7 +28,7 @@ export class NeDBVenda {
         });
     }
 
-    async findAllDocuments(): Promise<Venda[]> {
+    async findAllDocuments(){
         return new Promise((resolve, reject) => {
             db.find({}, function (err, docs) {
                 if (err) {
@@ -40,7 +40,7 @@ export class NeDBVenda {
         });
     }
 
-    async getById(id: string): Promise<Venda> {
+    async getById(id: string){
         return new Promise((resolve, reject) => {
             db.find({ _id: id }, function (err, doc) {
                 if (err) {
@@ -52,7 +52,7 @@ export class NeDBVenda {
         });
     }
 
-    async getByProduto(id: string): Promise<Venda[]> {
+    async getByProduto(id: string){
         return new Promise((resolve, reject) => {
             db.find({ produto: id }, function (err, docs) {
                 if (err) {

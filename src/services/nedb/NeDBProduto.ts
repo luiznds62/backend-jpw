@@ -26,7 +26,7 @@ export class NeDBProduto {
         });
     }
 
-    async findAllDocuments(): Promise<Produto[]> {
+    async findAllDocuments() {
         return new Promise((resolve, reject) => {
             db.find({}, function (err, docs) {
                 if (err) {
@@ -38,7 +38,7 @@ export class NeDBProduto {
         });
     }
 
-    async getById(id: string): Promise<Produto> {
+    async getById(id: string) {
         return new Promise((resolve, reject) => {
             db.find({ _id: id }, function (err, doc) {
                 if (err) {

@@ -50,7 +50,6 @@ let NeDBProduto = class NeDBProduto {
                         reject(err);
                     }
                     else {
-                        console.log(docs);
                         resolve(docs);
                     }
                 });

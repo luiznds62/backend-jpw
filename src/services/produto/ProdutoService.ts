@@ -20,15 +20,15 @@ export class ProdutoService {
         return await this.neDBService.create(produto);
     }
 
-    async buscarTodos(): Promise<Produto[]> {
+    async buscarTodos() {
         var produtos = await this.neDBService.findAllDocuments();
-        for (var i = 0; i < produtos.length; i++) {
+        for (var i = 0; i < produtos[0].length; i++) {
             produtos[i].usuarioCadastro = await this.neDBUsuario.getById(produtos[i].usuarioCadastro);
         }
         return produtos
     }
 
-    async buscarPeloId(id: string): Promise<Produto> {
+    async buscarPeloId(id: string) {
         var produto = await this.neDBService.getById(id);
         produto[0].usuarioCadastro = await this.neDBUsuario.getById(produto[0].usuarioCadastro);
         return produto

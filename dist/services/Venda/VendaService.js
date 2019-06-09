@@ -18,54 +18,70 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const common_1 = require("@tsed/common");
-const NeDBProduto_1 = require("../nedb/NeDBProduto");
+const NeDBVenda_1 = require("../nedb/NeDBVenda");
 const NeDBUsuario_1 = require("../nedb/NeDBUsuario");
 const conversorMonetarioService_1 = require("../conversorMonetario/conversorMonetarioService");
-let ProdutoService = class ProdutoService {
-    constructor(neDBService, neDBUsuario, conversorMonetarioService) {
+const NeDBProduto_1 = require("../nedb/NeDBProduto");
+let VendaService = class VendaService {
+    constructor(neDBService, neDBProduto, neDBUsuario, conversorMonetarioService) {
         this.neDBService = neDBService;
+        this.neDBProduto = neDBProduto;
         this.neDBUsuario = neDBUsuario;
         this.conversorMonetarioService = conversorMonetarioService;
     }
-    cadastrar(produto) {
+    cadastrar(venda) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log(yield this.conversorMonetarioService.converteMoedas('BRL', 'USD', produto.valorUnitario));
-            produto.valorUnitarioDolar = yield this.conversorMonetarioService.converteMoedas('BRL', 'USD', produto.valorUnitario);
-            return yield this.neDBService.create(produto);
+            var produto = yield this.neDBProduto.getById(venda.produto);
+            venda.valorTotal = (produto[0].valorUnitario) * venda.quantidade;
+            venda.valorTotalDolar = yield this.conversorMonetarioService.converteMoedas('BRL', 'USD', venda.valorTotal);
+            return yield this.neDBService.create(venda);
         });
     }
     buscarTodos() {
         return __awaiter(this, void 0, void 0, function* () {
-            var produtos = yield this.neDBService.findAllDocuments();
-            for (var i = 0; i < produtos.length; i++) {
-                produtos[i].usuarioCadastro = yield this.neDBUsuario.getById(produtos[i].usuarioCadastro);
+            var Vendas = yield this.neDBService.findAllDocuments();
+            for (var i = 0; i < Vendas.length; i++) {
+                Vendas[i].usuarioCadastro = yield this.neDBUsuario.getById(Vendas[i].usuarioCadastro);
+                Vendas[i].produto = yield this.neDBProduto.getById(Vendas[i].produto);
             }
-            return produtos;
+            return Vendas;
         });
     }
     buscarPeloId(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            var produto = yield this.neDBService.getById(id);
-            produto[0].usuarioCadastro = yield this.neDBUsuario.getById(produto[0].usuarioCadastro);
-            return produto;
+            var Venda = yield this.neDBService.getById(id);
+            Venda[0].usuarioCadastro = yield this.neDBUsuario.getById(Venda[0].usuarioCadastro);
+            Venda[0].produto = yield this.neDBProduto.getById(Venda[0].produto);
+            return Venda;
         });
     }
-    atualizaProduto(id, produto) {
+    buscarVendaPorProduto(idProduto) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.neDBService.updateProduto(id, produto);
+            var vendas = yield this.neDBService.getByProduto(idProduto);
+            for (var i = 0; i < vendas.length; i++) {
+                vendas[i].usuarioCadastro = yield this.neDBUsuario.getById(vendas[i].usuarioCadastro);
+                vendas[i].produto = yield this.neDBProduto.getById(vendas[i].produto);
+            }
+            return vendas;
         });
     }
-    removeProduto(id) {
+    atualizaVenda(id, venda) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.neDBService.updateVenda(id, venda);
+        });
+    }
+    removeVenda(id) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield this.neDBService.deleteById(id);
         });
     }
 };
-ProdutoService = __decorate([
+VendaService = __decorate([
     common_1.Service(),
-    __metadata("design:paramtypes", [NeDBProduto_1.NeDBProduto,
+    __metadata("design:paramtypes", [NeDBVenda_1.NeDBVenda,
+        NeDBProduto_1.NeDBProduto,
         NeDBUsuario_1.NeDBUsuario,
         conversorMonetarioService_1.ConversorMonetarioService])
-], ProdutoService);
-exports.ProdutoService = ProdutoService;
-//# sourceMappingURL=ProdutoService.js.map
+], VendaService);
+exports.VendaService = VendaService;
+//# sourceMappingURL=VendaService.js.map

@@ -21,8 +21,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const common_1 = require("@tsed/common");
-const ProdutoService_1 = require("../../services/produto/ProdutoService");
-const ProdutoDto_1 = require("../../dto/ProdutoDto");
+const VendaService_1 = require("../../services/venda/VendaService");
+const VendaDto_1 = require("../../dto/VendaDto");
 const ReturnDTO_1 = require("../../common/ReturnDTO");
 const ExceptionsMensagens_1 = require("../../common/ExceptionsMensagens");
 const UsuarioService_1 = require("../../services/usuario/UsuarioService");
@@ -31,34 +31,34 @@ const Express = require("express");
 var path = require('path');
 var mime = require('mime');
 var fs = require('fs');
-let ProdutoCtrl = class ProdutoCtrl {
-    constructor(produtoService, usuarioService, csvService) {
-        this.produtoService = produtoService;
+let VendaCtrl = class VendaCtrl {
+    constructor(vendaService, usuarioService, csvService) {
+        this.vendaService = vendaService;
         this.usuarioService = usuarioService;
         this.csvService = csvService;
     }
-    cadastrarUsuario(produtoDto) {
+    cadastrarVenda(vendaDto) {
         return __awaiter(this, void 0, void 0, function* () {
-            var exception = yield produtoDto.valide();
+            var exception = yield vendaDto.valide();
             if (exception.erro) {
                 return yield new ReturnDTO_1.ReturnDTO(exception.mensagem, false, null);
             }
-            var produto = yield produtoDto.toDB();
-            return yield this.produtoService.cadastrar(produto).then(function (produtoDB) {
-                return new ReturnDTO_1.ReturnDTO('', true, produtoDB);
+            var venda = yield vendaDto.toDB();
+            return yield this.vendaService.cadastrar(venda).then(function (vendaDB) {
+                return new ReturnDTO_1.ReturnDTO('', true, vendaDB);
             }).catch(function () {
                 new ReturnDTO_1.ReturnDTO(new ExceptionsMensagens_1.ExceptionMensagens().mensagemPadraoBanco, false, null);
             });
         });
     }
-    relatorioProduto(req, res, next) {
+    relatorioVenda(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            var dadosProduto = yield this.produtoService.buscarTodos();
-            var csv = yield this.csvService.geraCsvProduto(dadosProduto);
-            var writerStream = fs.createWriteStream('produtos.csv');
+            var dadosVenda = yield this.vendaService.buscarTodos();
+            var csv = yield this.csvService.geraCsvVenda(dadosVenda);
+            var writerStream = fs.createWriteStream('vendas.csv');
             writerStream.write(csv, 'UTF8');
             writerStream.end();
-            var file = "produtos.csv";
+            var file = "vendas.csv";
             var filename = path.basename(file);
             var mimetype = mime.lookup(file);
             res.setHeader('Content-disposition', 'attachment; filename=' + filename);
@@ -69,31 +69,46 @@ let ProdutoCtrl = class ProdutoCtrl {
     }
     buscarPeloId(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.produtoService.buscarPeloId(id).then(function (produtoDB) {
-                return new ReturnDTO_1.ReturnDTO('', true, produtoDB);
+            return yield this.vendaService.buscarPeloId(id).then(function (VendaDB) {
+                return new ReturnDTO_1.ReturnDTO('', true, VendaDB);
             }).catch(function () {
                 new ReturnDTO_1.ReturnDTO(new ExceptionsMensagens_1.ExceptionMensagens().mensagemPadraoBanco, false, null);
             });
         });
     }
-    buscarTodosProdutos() {
+    buscarTodosVenda() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.produtoService.buscarTodos().then(function (produtosDB) {
-                return new ReturnDTO_1.ReturnDTO('', true, produtosDB);
+            return yield this.vendaService.buscarTodos().then(function (VendasDB) {
+                return new ReturnDTO_1.ReturnDTO('', true, VendasDB);
             }).catch(function () {
                 new ReturnDTO_1.ReturnDTO(new ExceptionsMensagens_1.ExceptionMensagens().mensagemPadraoBanco, false, null);
             });
         });
     }
-    atualizarProduto(id, produtoDto) {
+    consolideVendaProduto(idProduto) {
         return __awaiter(this, void 0, void 0, function* () {
-            var exception = yield produtoDto.valide();
+            var totalValorVendas = 0;
+            var totalValorVendasDolar = 0;
+            return yield this.vendaService.buscarVendaPorProduto(idProduto).then(function (vendasDB) {
+                for (var i = 0; i < vendasDB.length; i++) {
+                    totalValorVendas += vendasDB[i].valorTotal;
+                    totalValorVendasDolar += vendasDB[i].valorTotalDolar;
+                }
+                return new ReturnDTO_1.ReturnDTO(`Total vendido R$: ${totalValorVendas}, Total vendido USD: ${totalValorVendasDolar}`, true, vendasDB);
+            }).catch(function () {
+                new ReturnDTO_1.ReturnDTO(new ExceptionsMensagens_1.ExceptionMensagens().mensagemPadraoBanco, false, null);
+            });
+        });
+    }
+    atualizarVenda(id, vendaDto) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var exception = yield vendaDto.valide();
             if (exception.erro) {
                 return yield new ReturnDTO_1.ReturnDTO(exception.mensagem, false, null);
             }
-            var produto = yield produtoDto.toDB();
-            return yield this.produtoService.atualizaProduto(id, produto).then(function (retorno) {
-                if (retorno === '0 - Produto alterado com sucesso!') {
+            var venda = yield vendaDto.toDB();
+            return yield this.vendaService.atualizaVenda(id, venda).then(function (retorno) {
+                if (retorno === '0 - Venda alterado com sucesso!') {
                     return new ReturnDTO_1.ReturnDTO('', false, retorno);
                 }
                 return new ReturnDTO_1.ReturnDTO('', true, retorno);
@@ -102,9 +117,9 @@ let ProdutoCtrl = class ProdutoCtrl {
             });
         });
     }
-    deletarProduto(id) {
+    deletarVenda(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.produtoService.removeProduto(id).then(function (retorno) {
+            return yield this.vendaService.removeVenda(id).then(function (retorno) {
                 return new ReturnDTO_1.ReturnDTO('', true, retorno);
             }).catch(function () {
                 new ReturnDTO_1.ReturnDTO(new ExceptionsMensagens_1.ExceptionMensagens().mensagemPadraoBanco, false, null);
@@ -116,48 +131,55 @@ __decorate([
     common_1.Post("/"),
     __param(0, common_1.BodyParams()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [ProdutoDto_1.ProdutoDto]),
+    __metadata("design:paramtypes", [VendaDto_1.VendaDto]),
     __metadata("design:returntype", Promise)
-], ProdutoCtrl.prototype, "cadastrarUsuario", null);
+], VendaCtrl.prototype, "cadastrarVenda", null);
 __decorate([
-    common_1.Get("/relatorio/produto"),
+    common_1.Get("/relatorio/venda"),
     __param(0, common_1.Req()),
     __param(1, common_1.Res()),
     __param(2, common_1.Next()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object, Function]),
     __metadata("design:returntype", Promise)
-], ProdutoCtrl.prototype, "relatorioProduto", null);
+], VendaCtrl.prototype, "relatorioVenda", null);
 __decorate([
     common_1.Get("/:id"),
     __param(0, common_1.PathParams("id")), __param(0, common_1.Required()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
-], ProdutoCtrl.prototype, "buscarPeloId", null);
+], VendaCtrl.prototype, "buscarPeloId", null);
 __decorate([
     common_1.Get("/"),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
-], ProdutoCtrl.prototype, "buscarTodosProdutos", null);
+], VendaCtrl.prototype, "buscarTodosVenda", null);
+__decorate([
+    common_1.Get("/consolide/:idProduto"),
+    __param(0, common_1.PathParams("idProduto")), __param(0, common_1.Required()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], VendaCtrl.prototype, "consolideVendaProduto", null);
 __decorate([
     common_1.Put("/:id"),
     __param(0, common_1.PathParams("id")), __param(1, common_1.BodyParams()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, ProdutoDto_1.ProdutoDto]),
+    __metadata("design:paramtypes", [String, VendaDto_1.VendaDto]),
     __metadata("design:returntype", Promise)
-], ProdutoCtrl.prototype, "atualizarProduto", null);
+], VendaCtrl.prototype, "atualizarVenda", null);
 __decorate([
     common_1.Delete("/:id"),
     __param(0, common_1.PathParams("id")), __param(0, common_1.Required()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
-], ProdutoCtrl.prototype, "deletarProduto", null);
-ProdutoCtrl = __decorate([
-    common_1.Controller("/produto"),
-    __metadata("design:paramtypes", [ProdutoService_1.ProdutoService, UsuarioService_1.UsuarioService, ConversorCSVService_1.ConversorCSVService])
-], ProdutoCtrl);
-exports.ProdutoCtrl = ProdutoCtrl;
-//# sourceMappingURL=ProdutoCtrl.js.map
+], VendaCtrl.prototype, "deletarVenda", null);
+VendaCtrl = __decorate([
+    common_1.Controller("/venda"),
+    __metadata("design:paramtypes", [VendaService_1.VendaService, UsuarioService_1.UsuarioService, ConversorCSVService_1.ConversorCSVService])
+], VendaCtrl);
+exports.VendaCtrl = VendaCtrl;
+//# sourceMappingURL=VendaCtrl.js.map

@@ -20,23 +20,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const common_1 = require("@tsed/common");
 var Datastore = require('nedb');
 var db = new Datastore({
-    filename: 'pessoa.json'
+    filename: 'venda.json'
 });
-let NeDBPessoa = class NeDBPessoa {
+let NeDBVenda = class NeDBVenda {
     constructor() {
         db.loadDatabase(function (err) {
-            console.log(`Erros no database Pessoa >> ${err}`);
+            if (err) {
+                console.log(`Erros no database Venda >> ${err}`);
+            }
         });
     }
-    create(pessoa) {
+    create(venda) {
         return __awaiter(this, void 0, void 0, function* () {
             return new Promise((resolve, reject) => {
-                db.insert(pessoa, function (err, newDoc) {
+                db.insert(venda, function (err, newDoc) {
                     if (err) {
                         reject(err);
                     }
                     else {
-                        resolve(`${newDoc} criado com sucesso!`);
+                        resolve(`${newDoc} - Venda criado com sucesso!`);
                     }
                 });
             });
@@ -50,7 +52,6 @@ let NeDBPessoa = class NeDBPessoa {
                         reject(err);
                     }
                     else {
-                        console.log(docs);
                         resolve(docs);
                     }
                 });
@@ -71,14 +72,28 @@ let NeDBPessoa = class NeDBPessoa {
             });
         });
     }
-    updatePessoa(id, pessoa) {
+    getByProduto(id) {
         return __awaiter(this, void 0, void 0, function* () {
             return new Promise((resolve, reject) => {
-                db.update({ _id: id }, pessoa, function (err, numReplaced) {
+                db.find({ produto: id }, function (err, docs) {
                     if (err) {
                         reject(err);
                     }
-                    resolve(`${numReplaced} alterado com sucesso!`);
+                    else {
+                        resolve(docs);
+                    }
+                });
+            });
+        });
+    }
+    updateVenda(id, Venda) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return new Promise((resolve, reject) => {
+                db.update({ _id: id }, Venda, function (err, numReplaced) {
+                    if (err) {
+                        reject(err);
+                    }
+                    resolve(`${numReplaced} - Venda alterado com sucesso!`);
                 });
             });
         });
@@ -90,15 +105,15 @@ let NeDBPessoa = class NeDBPessoa {
                     if (err) {
                         reject(err);
                     }
-                    resolve(`${numRemoved} removido com sucesso!`);
+                    resolve(`${numRemoved} - Venda removido com sucesso!`);
                 });
             });
         });
     }
 };
-NeDBPessoa = __decorate([
+NeDBVenda = __decorate([
     common_1.Service(),
     __metadata("design:paramtypes", [])
-], NeDBPessoa);
-exports.NeDBPessoa = NeDBPessoa;
-//# sourceMappingURL=NeDBPessoa.js.map
+], NeDBVenda);
+exports.NeDBVenda = NeDBVenda;
+//# sourceMappingURL=NeDBVenda.js.map

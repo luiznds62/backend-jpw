@@ -41,13 +41,27 @@ export class UsuarioDTO {
 
     async valide(): Promise<Exception> {
         var usuarios = await this.usuarioService.buscarTodos()
-        for(var i = 0; i < usuarios.length; i++){
+        for(var i = 0; i < usuarios[0].length; i++){
             if (this.email === usuarios[i].email) {
                 return new Exception('Email já utilizado!', true)
             }
             if (this.usuario === usuarios[i].usuario) {
+                console.log(this.usuario);
+                console.log(usuarios[i].usuario);
                 return new Exception('Nome de usuário já utilizado!', true)
             }
+        }
+
+        if(this.usuario === ""){
+            return new Exception('Usuário inválido!', true)
+        }
+
+        if(this.senha === ""){
+            return new Exception('Senha inválido!', true)
+        }
+
+        if(this.email === ""){
+            return new Exception('Email inválido!', true)
         }
 
         if (!validarEmail(this.email)) {

@@ -10,6 +10,7 @@ const common_1 = require("@tsed/common");
 const cors = require("cors");
 require("@tsed/swagger");
 const ts_log_debug_1 = require("ts-log-debug");
+var porta = process.env.PORT || 3000;
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const compress = require("compression");
@@ -65,7 +66,7 @@ Server = __decorate([
         calendar: {
             token: true
         },
-        httpPort: "127.0.0.1:3000",
+        httpPort: "127.0.0.1:" + porta,
         httpsPort: "127.0.0.2:3001",
     })
 ], Server);

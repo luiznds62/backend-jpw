@@ -25,10 +25,15 @@ const UsuarioService_1 = require("../../services/usuario/UsuarioService");
 const UsuarioDto_1 = require("../../dto/UsuarioDto");
 const ReturnDTO_1 = require("../../common/ReturnDTO");
 const ExceptionsMensagens_1 = require("../../common/ExceptionsMensagens");
-const export_to_csv_1 = require("export-to-csv");
+const ConversorCSVService_1 = require("../../services/conversorCSV/ConversorCSVService");
+const Express = require("express");
+var path = require('path');
+var mime = require('mime');
+var fs = require('fs');
 let UsuarioCtrl = class UsuarioCtrl {
-    constructor(usuarioService) {
+    constructor(usuarioService, csvService) {
         this.usuarioService = usuarioService;
+        this.csvService = csvService;
     }
     cadastrarUsuario(usuarioDTO) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -53,22 +58,20 @@ let UsuarioCtrl = class UsuarioCtrl {
             });
         });
     }
-    relatorioUsuario() {
+    relatorioUsuario(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            const options = {
-                fieldSeparator: ',',
-                quoteStrings: '"',
-                decimalSeparator: '.',
-                showLabels: true,
-                showTitle: true,
-                title: 'Relatório de usuários',
-                useTextFile: false,
-                useBom: true,
-                useKeysAsHeaders: true,
-            };
             var dadosUsuario = yield this.usuarioService.buscarTodos();
-            const csvExporter = new export_to_csv_1.ExportToCsv(options);
-            return window.open(encodeURI(csvExporter.generateCsv(dadosUsuario)));
+            var csv = yield this.csvService.geraCsvUsuario(dadosUsuario);
+            var writerStream = fs.createWriteStream('usuarios.csv');
+            writerStream.write(csv, 'UTF8');
+            writerStream.end();
+            var file = "usuarios.csv";
+            var filename = path.basename(file);
+            var mimetype = mime.lookup(file);
+            res.setHeader('Content-disposition', 'attachment; filename=' + filename);
+            res.setHeader('Content-type', mimetype);
+            var filestream = fs.createReadStream(file);
+            filestream.pipe(res);
         });
     }
     buscarTodosUsuarios() {
@@ -136,9 +139,12 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UsuarioCtrl.prototype, "buscarPeloId", null);
 __decorate([
-    common_1.Get("/relusuario/"),
+    common_1.Get("/relatorio/usuario"),
+    __param(0, common_1.Req()),
+    __param(1, common_1.Res()),
+    __param(2, common_1.Next()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Object, Object, Function]),
     __metadata("design:returntype", Promise)
 ], UsuarioCtrl.prototype, "relatorioUsuario", null);
 __decorate([
@@ -171,7 +177,7 @@ __decorate([
 ], UsuarioCtrl.prototype, "deletarUsuario", null);
 UsuarioCtrl = __decorate([
     common_1.Controller("/usuario"),
-    __metadata("design:paramtypes", [UsuarioService_1.UsuarioService])
+    __metadata("design:paramtypes", [UsuarioService_1.UsuarioService, ConversorCSVService_1.ConversorCSVService])
 ], UsuarioCtrl);
 exports.UsuarioCtrl = UsuarioCtrl;
 //# sourceMappingURL=UsuarioCtrl.js.map

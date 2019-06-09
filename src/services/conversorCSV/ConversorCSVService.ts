@@ -3,7 +3,7 @@ import {Service} from "@tsed/common";
 @Service()
 export class ConversorCSVService{
 
-    async geraCsvUsuario(dadosJson: Object[]){
+    async geraCsvUsuario(dadosJson){
         const { Parser } = require('json2csv');
         const fields = ['id', 'usuario', 'senha', 'email', '_id'];
         
@@ -13,7 +13,7 @@ export class ConversorCSVService{
         return csv
     }
 
-    async geraCsvVenda(dadosJson: Object[]){
+    async geraCsvVenda(dadosJson){
         const { Parser } = require('json2csv');
         const fields = ['id', 'produto', 'usuarioCadastro', 'quantidade', 'valorTotal', 'valorTotalDolar', '_id'];
         
@@ -23,7 +23,7 @@ export class ConversorCSVService{
         return csv
     }
 
-    async geraCsvProduto(dadosJson: Object[]){
+    async geraCsvProduto(dadosJson){
         const { Parser } = require('json2csv');
         const fields = ['id', 'nome', 'descricao', 'marca',
          'valorUnitario', 'valorUnitarioDolar', 'origem', 'usuarioCadastro','_id'];

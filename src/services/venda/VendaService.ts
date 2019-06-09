@@ -23,25 +23,25 @@ export class VendaService {
         return await this.neDBService.create(venda);
     }
 
-    async buscarTodos(): Promise<Venda[]> {
+    async buscarTodos() {
         var Vendas = await this.neDBService.findAllDocuments();
-        for (var i = 0; i < Vendas.length; i++) {
+        for (var i = 0; i < Vendas[0].length; i++) {
             Vendas[i].usuarioCadastro = await this.neDBUsuario.getById(Vendas[i].usuarioCadastro);
             Vendas[i].produto = await this.neDBProduto.getById(Vendas[i].produto);
         }
         return Vendas
     }
 
-    async buscarPeloId(id: string): Promise<Venda> {
+    async buscarPeloId(id: string){
         var Venda = await this.neDBService.getById(id);
         Venda[0].usuarioCadastro = await this.neDBUsuario.getById(Venda[0].usuarioCadastro);
         Venda[0].produto = await this.neDBProduto.getById(Venda[0].produto);
         return Venda
     }
 
-    async buscarVendaPorProduto(idProduto: string): Promise<Venda[]>{
+    async buscarVendaPorProduto(idProduto: string){
         var vendas = await this.neDBService.getByProduto(idProduto);
-        for(var i = 0; i < vendas.length; i++){
+        for(var i = 0; i < vendas[0].length; i++){
             vendas[i].usuarioCadastro = await this.neDBUsuario.getById(vendas[i].usuarioCadastro);
             vendas[i].produto = await this.neDBProduto.getById(vendas[i].produto);
         }
