@@ -92,11 +92,11 @@ export class UsuarioCtrl {
     @Get("/login/:usuario/:senha")
     async login(@PathParams("usuario") @Required() usuario: string,
                 @PathParams("senha") @Required() senha: string){
-        return await this.usuarioService.login(usuario,senha).then(function(retorno: string){
-            if(retorno === 'Login realizado com sucesso'){
-                return new ReturnDTO(retorno,true,'');
+        return await this.usuarioService.login(usuario,senha).then(function(retorno: any){
+            if(retorno){
+                return new ReturnDTO('Login realizado com sucesso',true,retorno);
             }else{
-                return new ReturnDTO(retorno,false,'');
+                return new ReturnDTO('Senha inválida',false,'');
             }
         }).catch(function(){
             new ReturnDTO(new ExceptionMensagens().mensagemPadraoBanco, false, null);
