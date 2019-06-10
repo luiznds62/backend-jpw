@@ -42,7 +42,7 @@ export class VendaCtrl {
         var venda = await vendaDto.toDB()
 
         return await this.vendaService.cadastrar(venda).then(function (vendaDB: Venda) {
-            return new ReturnDTO('', true, vendaDB);
+            return new ReturnDTO('Venda cadastrada com sucesso', true, vendaDB);
         }).catch(function () {
             new ReturnDTO(new ExceptionMensagens().mensagemPadraoBanco, false, null);
         });
