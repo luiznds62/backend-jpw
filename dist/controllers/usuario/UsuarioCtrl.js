@@ -86,11 +86,11 @@ let UsuarioCtrl = class UsuarioCtrl {
     login(usuario, senha) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield this.usuarioService.login(usuario, senha).then(function (retorno) {
-                if (retorno === 'Login realizado com sucesso') {
-                    return new ReturnDTO_1.ReturnDTO(retorno, true, '');
+                if (retorno) {
+                    return new ReturnDTO_1.ReturnDTO('Login realizado com sucesso', true, retorno);
                 }
                 else {
-                    return new ReturnDTO_1.ReturnDTO(retorno, false, '');
+                    return new ReturnDTO_1.ReturnDTO('Senha inválida', false, '');
                 }
             }).catch(function () {
                 new ReturnDTO_1.ReturnDTO(new ExceptionsMensagens_1.ExceptionMensagens().mensagemPadraoBanco, false, null);

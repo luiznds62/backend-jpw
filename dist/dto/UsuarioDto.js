@@ -44,7 +44,7 @@ class UsuarioDTO {
     valide() {
         return __awaiter(this, void 0, void 0, function* () {
             var usuarios = yield this.usuarioService.buscarTodos();
-            for (var i = 0; i < usuarios.length; i++) {
+            for (var i = 0; i < usuarios[0].length; i++) {
                 if (this.email === usuarios[i].email) {
                     return new Exception_1.Exception('Email já utilizado!', true);
                 }

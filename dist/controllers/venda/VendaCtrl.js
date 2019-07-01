@@ -45,7 +45,7 @@ let VendaCtrl = class VendaCtrl {
             }
             var venda = yield vendaDto.toDB();
             return yield this.vendaService.cadastrar(venda).then(function (vendaDB) {
-                return new ReturnDTO_1.ReturnDTO('', true, vendaDB);
+                return new ReturnDTO_1.ReturnDTO('Venda cadastrada com sucesso', true, vendaDB);
             }).catch(function () {
                 new ReturnDTO_1.ReturnDTO(new ExceptionsMensagens_1.ExceptionMensagens().mensagemPadraoBanco, false, null);
             });

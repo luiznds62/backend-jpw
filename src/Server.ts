@@ -12,7 +12,7 @@ const options:cors.CorsOptions = {
   allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "X-Access-Token"],
   credentials: true,
   methods: "GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE",
-  origin: "http://localhost:4200",
+  origin: "*",
   preflightContinue: false
 }
 
@@ -33,8 +33,7 @@ const options:cors.CorsOptions = {
   calendar: {
     token: true
   },
-  httpPort: "127.0.0.1:3000",
-  httpsPort: "127.0.0.2:3001",
+  httpPort: process.env.PORT || 8080,
 })
 export class Server extends ServerLoader {
   /**

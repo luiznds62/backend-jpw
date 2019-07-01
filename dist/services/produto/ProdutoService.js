@@ -37,7 +37,7 @@ let ProdutoService = class ProdutoService {
     buscarTodos() {
         return __awaiter(this, void 0, void 0, function* () {
             var produtos = yield this.neDBService.findAllDocuments();
-            for (var i = 0; i < produtos.length; i++) {
+            for (var i = 0; i < produtos[0].length; i++) {
                 produtos[i].usuarioCadastro = yield this.neDBUsuario.getById(produtos[i].usuarioCadastro);
             }
             return produtos;

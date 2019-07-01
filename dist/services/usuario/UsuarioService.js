@@ -28,14 +28,14 @@ let UsuarioService = class UsuarioService {
             var usuarioLogin = yield this.neDBService.getUsuarioByUsuario(usuario);
             if (usuarioLogin) {
                 if (usuarioLogin[0].senha === senha) {
-                    return `Login realizado com sucesso`;
+                    return usuarioLogin;
                 }
                 else {
-                    return `Senha inválida`;
+                    return false;
                 }
             }
             else {
-                return `Usuário não encontrado`;
+                return false;
             }
         });
     }

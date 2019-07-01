@@ -10,7 +10,6 @@ const common_1 = require("@tsed/common");
 const cors = require("cors");
 require("@tsed/swagger");
 const ts_log_debug_1 = require("ts-log-debug");
-var porta = process.env.PORT || 3000;
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const compress = require("compression");
@@ -20,7 +19,7 @@ const options = {
     allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "X-Access-Token"],
     credentials: true,
     methods: "GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE",
-    origin: "http://localhost:4200",
+    origin: "*",
     preflightContinue: false
 };
 let Server = class Server extends common_1.ServerLoader {
@@ -66,8 +65,7 @@ Server = __decorate([
         calendar: {
             token: true
         },
-        httpPort: "127.0.0.1:" + porta,
-        httpsPort: "127.0.0.2:3001",
+        httpPort: process.env.PORT || 8080,
     })
 ], Server);
 exports.Server = Server;

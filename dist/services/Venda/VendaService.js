@@ -40,7 +40,7 @@ let VendaService = class VendaService {
     buscarTodos() {
         return __awaiter(this, void 0, void 0, function* () {
             var Vendas = yield this.neDBService.findAllDocuments();
-            for (var i = 0; i < Vendas.length; i++) {
+            for (var i = 0; i < Vendas[0].length; i++) {
                 Vendas[i].usuarioCadastro = yield this.neDBUsuario.getById(Vendas[i].usuarioCadastro);
                 Vendas[i].produto = yield this.neDBProduto.getById(Vendas[i].produto);
             }
@@ -58,7 +58,7 @@ let VendaService = class VendaService {
     buscarVendaPorProduto(idProduto) {
         return __awaiter(this, void 0, void 0, function* () {
             var vendas = yield this.neDBService.getByProduto(idProduto);
-            for (var i = 0; i < vendas.length; i++) {
+            for (var i = 0; i < vendas[0].length; i++) {
                 vendas[i].usuarioCadastro = yield this.neDBUsuario.getById(vendas[i].usuarioCadastro);
                 vendas[i].produto = yield this.neDBProduto.getById(vendas[i].produto);
             }
