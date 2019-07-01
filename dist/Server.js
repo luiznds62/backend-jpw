@@ -52,7 +52,7 @@ Server = __decorate([
         rootDir,
         acceptMimes: ["application/json"],
         mount: {
-            '/api': `${rootDir}/**/*Ctrl.ts`
+            '/api': `${rootDir}/**/*Ctrl.js`
         },
         logger: {
             debug: false,
@@ -61,9 +61,6 @@ Server = __decorate([
         },
         swagger: {
             path: "/api-docs"
-        },
-        calendar: {
-            token: true
         },
         httpPort: process.env.PORT || 8080,
     })

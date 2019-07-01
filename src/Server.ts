@@ -30,9 +30,6 @@ const options:cors.CorsOptions = {
   swagger: {
     path: "/api-docs"
   },
-  calendar: {
-    token: true
-  },
   httpPort: process.env.PORT || 8080,
 })
 export class Server extends ServerLoader {
