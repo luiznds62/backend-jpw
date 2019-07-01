@@ -52,7 +52,7 @@ Server = __decorate([
         rootDir,
         acceptMimes: ["application/json"],
         mount: {
-            '/api': `${rootDir}/**/*Ctrl.js`
+            '/api': `${rootDir}/**/*Ctrl.ts`
         },
         logger: {
             debug: false,
